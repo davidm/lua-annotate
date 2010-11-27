@@ -1,17 +1,14 @@
 LuaAnnotate - C code comments externally stored but displayed inline.
 
-This tool enables you to maintain C source file comments in a
-text file external to the source file itself and then later display
-those comments inline to the source.
+LuaAnnotate is a tool for displaying C source file comments inline to
+the source but stored in a separate file.  The comments are maintained
+in a text file (annotate.txt) in the same directory as the C sources.
+Displaying the comments inline to the C code can be done in many ways:
 
-The comments are maintained in a text file (annotate.txt) in the same
-directory as the C sources.  Displaying the comments inline to the C
-code can be done in many ways:
-
-  - weaving the comments into the source code as C comments but saved
-    as a different file for viewing in any text editor.
-  - displaying annotations in the SciTE text editor when viewing the
-	  original source files (without altering those source files).
+  - weaving the comments into the source code as C comments and saving
+    the result to a temporary file for viewing in any text editor.
+  - displaying comments as annotations in the SciTE text editor when viewing
+	  the original source files (without altering those source files).
   - other possibilities (not implemented) include rendering as HTML
 	   or creating plugins for other text editors.		
 
