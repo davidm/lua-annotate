@@ -352,3 +352,22 @@ division (or modulo) by zero (resulting in not-a-number, NaN), which Lua 5.1 fol
 but it caused problems so this folding was eliminated in Lua 5.2.
 Returns 1 (not 0) if folding was possible.
 --see <http://lua-users.org/lists/lua-l/2007-02/msg00207.html>.
+
+# ltable.h:gnode
+Table*, int -> Node*
+Gets i-th node in table's hashpart array.
+(Question: why isn't there a corresponding function
+to get the i-th node in table's arraypart array? or why
+have this macro at all?)
+
+# ltable.h:gkey
+Node* -> TValue*
+Gets node key's TValue.
+
+# ltable.h:gval
+Node* -> TValue*
+Gets node value's TValue.
+
+# ltable.h:gnext
+Node* -> Node*
+Gets node following given node in chain of nodes.
