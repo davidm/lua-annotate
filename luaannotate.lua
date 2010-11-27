@@ -26,7 +26,7 @@ local function load_annotations(path)
   for line in fh:lines() do
     if line:match'^#' then
       commit()
-      local sfile, sname = line:match'^#%s*([^:]+):(%w*)'
+      local sfile, sname = line:match'^#%s*([^:]+):([%w_]*)'
       if not sfile then
         error('Invalid directive in ' .. path .. ':' .. linenum)
       end
@@ -54,10 +54,10 @@ local function place_annotations(code, path, annotations)
   local iline = 1
   for line in (code .. '\n'):gmatch'(.-)\r?\n' do
     local sname =
-      line:match'^[%w ]-[%w*]+%s(%w+)%s*%b()%s*$' or
-      line:match'^#define%s+(%w+)' or
-      line:match'^typedef%s+struct%s+(%w+)' or
-      line:match'^typedef%s+union%s+(%w+)'
+      line:match'^[%w_ ]-[%w_*]+%s([%w_]+)%s*%b()%s*$' or
+      line:match'^#define%s+([%w_]+)' or
+      line:match'^typedef%s+struct%s+([%w_]+)' or
+      line:match'^typedef%s+union%s+([%w_]+)'
     if sname then
       local id = sfile .. ':' .. sname
       local comment = annotations[id]
