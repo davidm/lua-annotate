@@ -57,7 +57,8 @@ local function place_annotations(code, path, annotations)
       line:match'^[%w_ ]-[%w_*]+%s([%w_]+)%s*%b()%s*$' or
       line:match'^#define%s+([%w_]+)' or
       line:match'^typedef%s+struct%s+([%w_]+)' or
-      line:match'^typedef%s+union%s+([%w_]+)'
+      line:match'^typedef%s+union%s+([%w_]+)' or
+      line:match'^typedef%s+.*%s+([%w_]+);'
     if sname then
       local id = sfile .. ':' .. sname
       local comment = annotations[id]
