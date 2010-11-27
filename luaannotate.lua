@@ -54,7 +54,7 @@ local function place_annotations(code, path, annotations)
   local iline = 1
   for line in (code .. '\n'):gmatch'(.-)\r?\n' do
     local sname =
-      line:match'^[%w_ ]-[%w_*]+%s([%w_]+)%s*%b()%s*$' or
+      line:match'^[%w_ ]-[%w_*]+%s([%w_]+)%s*%b()%s*%{?$' or
       line:match'^#define%s+([%w_]+)' or
       line:match'^typedef%s+struct%s+([%w_]+)' or
       line:match'^typedef%s+union%s+([%w_]+)' or
