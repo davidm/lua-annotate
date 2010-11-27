@@ -1,3 +1,72 @@
+# lauxlib.h:
+This is the public interface of the "Auxiliary Library".
+
+# lauxlib.h:luaL_newlib
+int luaL_newlib (lua_State *L, const luaL_Reg *l);
+[-0, +1, m]
+
+# lauxlib.h:luaL_argcheck
+void luaL_argcheck (lua_State *L, int cond, int narg, const char *extramsg);
+[-0, +0, v]
+
+# lcode.h:getcode
+FuncState*, expdesc* -> int
+
+# lua.h:
+This is the public interface to the core Lua library.
+
+# lua.h:LUA_VERSION_NUM
+This is the number exposed by lua_version().
+Note: 502 mean "5.2".  501 means "5.1"
+
+# lua.h:LUA_SIGNATURE
+Lua bytecode always starts with a signature consisting
+of these bytes.  Both Lua 5.1 and 5.2 start with this
+signature.  Some functions like load() determine whether
+a file is Lua source code or Lua byte code by looking
+for this signature.  The \033 (escape) character is not
+a valid first character in Lua source code.
+
+# lua.h:LUA_ERRERR
+Note: see also LUA_ERRFILE in lauxlib.h.
+
+# lua.h:LUA_NUMTAGS
+This must always be set to one more than the
+maximum LUA_T* value above.
+
+# lua.h:LUA_MINSTACK
+From the reference manual:
+Whenever Lua calls C, it ensures that at least
+LUA_MINSTACK stack positions are available.
+LUA_MINSTACK is defined as 20, so that usually
+you do not have to worry about stack space
+unless your code has loops pushing elements
+onto the stack.
+
+# lua.h:LUA_RIDX_MAINTHREAD
+From the reference manual: At this index the
+registry has the main thread of the state.
+(The main thread is the one created together
+with the state.)
+
+# lua.h:LUA_RIDX_GLOBALS
+From the reference manual: At this index the
+registry has the global environment. This is the
+C equivalent to the _G global variable.
+
+# lua.h:LUA_RIDX_LAST
+This must always be set to the maximum LUA_RIDX
+value above.
+
+# lua.h:lua_Number
+Typically set to double on PCs.
+
+# lua.h:lua_Integer
+Typically set to int (32-bit) on PCs.
+
+# lua.h:lua_Unsigned
+Typically set to unsigned int on PCs.
+
 # luac.c:
 This is the Lua compiler front-end (luac).
 
