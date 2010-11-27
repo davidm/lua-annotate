@@ -12,6 +12,9 @@ void luaL_argcheck (lua_State *L, int cond, int narg, const char *extramsg);
 # lcode.h:getcode
 FuncState*, expdesc* -> int
 
+# llimits.h:MAXSTACK
+Note: must fix in byte (lu_byte)--see Proto::maxstacksize.
+
 # lua.h:
 This is the public interface to the core Lua library.
 
@@ -270,3 +273,82 @@ rather than looking in the metatable.
 
 # lobject.h:twoto
 Efficiently raises 2 to the integer x power.
+
+# lopcodes.h:getarg
+Gets size bits starting at offset pos in Instruction i.
+Example: getarg(0x12345678,4,8) == 0x67
+
+# lopcodes.h:setarg
+Sets (in-place) size bits starting at offset pos in Instruction i to v.
+Example: Instruction i = 0x12345678; setarg(i,0x76,4,8); assert(i == 0x12345768);
+
+# lopcodes.h:GETARG_A
+Gets integer A fields bits of Instruction i.
+
+# lopcodes.h:SETARG_A
+Sets (in-place) A field bits of Instruction i to integer v.
+
+# lopcodes.h:CREATE_ABC
+Returns Instruction formed from opcode (OpCode) o and given integer A, B, C fields.
+
+# lcode:isnumeral
+Determines whether expression represents a number that is a known constant.
+Note: constant numbers can be used in expression folding (compile time evaluation).
+Careful on jumps (true (t) and false (f) patch lists).
+
+# lcode.c:luaK_ret
+Encode opcode for "return" (OP_RETURN).
+Note: (first,nret)=(0,0) means return no values.  nret == LUA_MULTRET means return all
+values starting at first (useful for vararg expressions).
+
+# lcode.c:luaK_checkstack
+Updates function state's maximum needed stack size (maxstacksize) given that
+n additional registers will be needed.  Raises syntax error if above limit (MAXSTACK).
+
+# lcode.c:luaK_reserveregs
+Like luaK_checkstack but also reserves those n additional registers.
+
+# lcode.c:freereg
+This complements luaK_reserveregs.  It frees the top-most reserved register.
+But it only does this if reg is actually a register (not an index in the constant table)
+and it's not used for storage of a local variable (the lowest nactvar values on the stack).
+
+# lcode.c:addk
+Adds a constant with name `key` and value v to the function state's constant table
+(i.e. array k of size sizek where first nk values are used).
+Duplicates are detected and avoided via the helper table 'h', which maps each existing
+value in the constant table to an integer index in the constant table.  The constant
+table allocated size may need to be grown (and new empty space filled
+with nil's) prior to inserting the constant.  (TODO-comment on luaC_barrier?)
+Returns 0-based index of the new constant in the constant table.
+
+# lcode.c:luaK_stringK
+Adds a string to the constant table (addk).
+Note: stores in TValue first.
+
+# lcode.c:luaK_numberK
+Adds a number to the constant table (addk).
+(TODO: comment on "numeric problems")
+
+# lcode.c:boolK
+Adds a boolean (0 or 1) to the constant table (addk).
+
+# lcode.c:nilK
+Adds a nil to the constant table (addk).
+Note: the helper table 'h' (see addk) normally maps constant values to indicies in the
+constant table, but the constant value is nil here, which Lua tables don't allow.
+So, following a design pattern in <http://lua-users.org/wiki/StoringNilsInTables>,
+we use another unique value instead as its placeholder, which here is
+convenient to use the h table itself, which is never used outside of the compiler
+internal and therefore has no chance of misinterpretation.
+h is a Table, which we wrap in a TValue before doing addk.
+
+# lcode.c:constfolding
+Attempts to constant fold (i.e. evaluate at compile time as an optimization) the given
+operation on the two expressions.
+Folding is attempted only on operations on numbers that are known constants
+(e.g. `local x = 1+1` -> `local x = 2`).  Moreover, constant folding is skipped on
+division (or modulo) by zero (resulting in not-a-number, NaN), which Lua 5.1 folded
+but it caused problems so this folding was eliminated in Lua 5.2.
+Returns 1 (not 0) if folding was possible.
+--see <http://lua-users.org/lists/lua-l/2007-02/msg00207.html>.
